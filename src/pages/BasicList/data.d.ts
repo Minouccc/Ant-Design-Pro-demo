@@ -21,20 +21,21 @@ export module BasicListApi {
 
   export interface Layout {
     tableColumn: TableColumn[];
-    tableToolBar: TableToolBar[];
-    batchToolBar: BatchToolBar[];
+    tableToolBar: Action[];
+    batchToolBar: Action[];
   }
 
   export interface TableColumn {
     title: string;
     dataIndex: string;
     key: string;
-    type: string;
+    type?: string;
     data?: Daum[];
     hideInColumn?: boolean;
     sorter?: boolean;
     mode?: string;
     actions?: Action[];
+    [key: string]: any;
   }
 
   export interface Daum {
@@ -81,24 +82,6 @@ export module BasicListApi {
     type: string;
     action: string;
     uri: string;
-    method?: string;
-  }
-
-  export interface TableToolBar {
-    component: string;
-    text: string;
-    type: string;
-    action: string;
-    id?: string;
-    uri?: string;
-  }
-
-  export interface BatchToolBar {
-    component: string;
-    text: string;
-    type: string;
-    action: string;
-    uri?: string;
     method?: string;
   }
 
