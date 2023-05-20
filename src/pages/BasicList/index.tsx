@@ -1,8 +1,9 @@
 import { PageContainer } from '@ant-design/pro-layout';
-import { Button, Card, Col, Pagination, Row, Space, Table, Tag } from 'antd';
-import moment from 'moment';
+import { Card, Col, Pagination, Row, Space, Table } from 'antd';
 import { useEffect, useState } from 'react';
 import { useRequest } from 'umi';
+import ActionBuilder from './builder/ActionBuilder';
+import ColumnBuilder from './builder/ColumnBuilder';
 import { BasicListApi } from './data';
 import './index.less';
 
@@ -19,51 +20,7 @@ const Index = () => {
     setPage(_page);
     setperPage(_perPage);
   };
-  const ActionBuilder = (actions: BasicListApi.Action[] | undefined) => {
-    return (actions || []).map((action) => {
-      if (action.component === 'button') {
-        return <Button type={action.type}>{action.text}</Button>;
-      }
-    });
-  };
-  const ColumnBuilder = () => {
-    const idArray = [
-      {
-        title: 'Id',
-        dataIndex: 'id',
-        key: 'id',
-      },
-    ];
-    const newColumns: BasicListApi.TableColumn[] = [];
-    init?.data?.layout?.tableColumn.forEach((column) => {
-      if (column.hideInColumn !== true) {
-        switch (column.type) {
-          case 'datetime':
-            column.render = (value: any) => {
-              return moment(value).format('YYYY-MM-DD HH:mm:ss');
-            };
-            break;
-          case 'switch':
-            column.render = (value: any) => {
-              const option = (column.data || []).find((item) => {
-                return (item.value = value);
-              });
-              return <Tag color={value ? 'blue' : 'red'}>{option?.title}</Tag>;
-            };
-            break;
-          case 'actions':
-            column.render = () => {
-              return <Space>{ActionBuilder(column.actions)}</Space>;
-            };
-            break;
-          default:
-            break;
-        }
-        newColumns.push(column);
-      }
-    });
-    return idArray.concat(newColumns || []);
-  };
+
   const searchLayout = () => {};
   const beforeTableLayout = () => {
     return (
@@ -105,7 +62,11 @@ const Index = () => {
       {searchLayout()}
       <Card>
         {beforeTableLayout()}
-        <Table dataSource={init?.data?.dataSource} columns={ColumnBuilder()} pagination={false} />
+        <Table
+          dataSource={init?.data?.dataSource}
+          columns={ColumnBuilder(init?.data?.layout?.tableColumn)}
+          pagination={false}
+        />
         {afterTableLayout()}
       </Card>
       {batchToolbar()}
