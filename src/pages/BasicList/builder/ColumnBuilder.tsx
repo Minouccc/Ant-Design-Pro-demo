@@ -4,11 +4,12 @@ import { BasicListApi } from '../data';
 import ActionBuilder from './ActionBuilder';
 
 const ColumnBuilder = (tableColumn: BasicListApi.TableColumn[] | undefined) => {
-  const idArray = [
+  const idArray: BasicListApi.TableColumn[] = [
     {
       title: 'Id',
       dataIndex: 'id',
       key: 'id',
+      sorter: true,
     },
   ];
   const newColumns: BasicListApi.TableColumn[] = [];

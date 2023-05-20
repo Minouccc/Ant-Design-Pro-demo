@@ -10,17 +10,25 @@ import './index.less';
 const Index = () => {
   const [page, setPage] = useState(1);
   const [perPage, setperPage] = useState(10);
+  const [sortQuery, setSortQuery] = useState('');
   const init = useRequest<{ data: BasicListApi.Data }>(
-    `https://public-api-v2.aspirantzhang.com/api/admins?X-API-KEY=antd&page=${page}&per_page=${perPage}`,
+    `https://public-api-v2.aspirantzhang.com/api/admins?X-API-KEY=antd&page=${page}&per_page=${perPage}${sortQuery}`,
   );
   useEffect(() => {
     init.run();
-  }, [page, perPage]);
+  }, [page, perPage, sortQuery]);
   const paginationChangeHandler = (_page: any, _perPage: any) => {
     setPage(_page);
     setperPage(_perPage);
   };
-
+  const tableChangeHandler = (_: any, __: any, sorter: any) => {
+    if (sorter.order === undefined) {
+      setSortQuery('');
+    } else {
+      const orderBy = sorter.order === 'ascend' ? 'asc' : 'desc';
+      setSortQuery(`&sort=${sorter.field}&order=${orderBy}`);
+    }
+  };
   const searchLayout = () => {};
   const beforeTableLayout = () => {
     return (
@@ -66,6 +74,7 @@ const Index = () => {
           dataSource={init?.data?.dataSource}
           columns={ColumnBuilder(init?.data?.layout?.tableColumn)}
           pagination={false}
+          onChange={tableChangeHandler}
         />
         {afterTableLayout()}
       </Card>
