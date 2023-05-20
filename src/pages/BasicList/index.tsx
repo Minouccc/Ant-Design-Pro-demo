@@ -1,9 +1,10 @@
 import { PageContainer } from '@ant-design/pro-layout';
-import { Card, Col, Pagination, Row, Space, Table } from 'antd';
+import { Button, Card, Col, Pagination, Row, Space, Table } from 'antd';
 import { useEffect, useState } from 'react';
 import { useRequest } from 'umi';
 import ActionBuilder from './builder/ActionBuilder';
 import ColumnBuilder from './builder/ColumnBuilder';
+import Modal from './component/Modal';
 import { BasicListApi } from './data';
 import './index.less';
 
@@ -11,6 +12,8 @@ const Index = () => {
   const [page, setPage] = useState(1);
   const [perPage, setperPage] = useState(10);
   const [sortQuery, setSortQuery] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalUrl, setModalUrl] = useState('');
   const init = useRequest<{ data: BasicListApi.Data }>(
     `https://public-api-v2.aspirantzhang.com/api/admins?X-API-KEY=antd&page=${page}&per_page=${perPage}${sortQuery}`,
   );
@@ -66,20 +69,48 @@ const Index = () => {
   const batchToolbar = () => {};
 
   return (
-    <PageContainer>
-      {searchLayout()}
-      <Card>
-        {beforeTableLayout()}
-        <Table
-          dataSource={init?.data?.dataSource}
-          columns={ColumnBuilder(init?.data?.layout?.tableColumn)}
-          pagination={false}
-          onChange={tableChangeHandler}
-        />
-        {afterTableLayout()}
-      </Card>
-      {batchToolbar()}
-    </PageContainer>
+    <>
+      <PageContainer>
+        {searchLayout()}
+        <Card>
+          <Button
+            type="primary"
+            onClick={() => {
+              setIsModalOpen(true);
+              setModalUrl('https://public-api-v2.aspirantzhang.com/api/admins/add?X-API-KEY=antd');
+            }}
+          >
+            add
+          </Button>
+          <Button
+            type="primary"
+            onClick={() => {
+              setIsModalOpen(true);
+              setModalUrl('https://public-api-v2.aspirantzhang.com/api/admins/206?X-API-KEY=antd');
+            }}
+          >
+            edit
+          </Button>
+          {beforeTableLayout()}
+          <Table
+            rowKey="id"
+            dataSource={init?.data?.dataSource}
+            columns={ColumnBuilder(init?.data?.layout?.tableColumn)}
+            pagination={false}
+            onChange={tableChangeHandler}
+          />
+          {afterTableLayout()}
+        </Card>
+        {batchToolbar()}
+      </PageContainer>
+      <Modal
+        isModalOpen={isModalOpen}
+        modalUrl={modalUrl}
+        hideMoal={() => {
+          setIsModalOpen(false);
+        }}
+      />
+    </>
   );
 };
 
