@@ -17,6 +17,7 @@ const Index = () => {
   const init = useRequest<{ data: BasicListApi.Data }>(
     `https://public-api-v2.aspirantzhang.com/api/admins?X-API-KEY=antd&page=${page}&per_page=${perPage}${sortQuery}`,
   );
+
   useEffect(() => {
     init.run();
   }, [page, perPage, sortQuery]);
