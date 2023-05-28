@@ -1,5 +1,5 @@
 import { DatePicker, Form, Input, Switch, TreeSelect } from 'antd';
-const FormBuilder = (data: PageApi.Daum[] | undefined) => {
+const FormBuilder = (data: BasicListApi.Field[] | undefined) => {
   return (data || []).map((field) => {
     switch (field.type) {
       case 'text':

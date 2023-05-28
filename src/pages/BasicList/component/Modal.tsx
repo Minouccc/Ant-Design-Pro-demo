@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { useRequest } from 'umi';
 import ActionBuilder from '../builder/ActionBuilder';
 import FormBuilder from '../builder/FormBuilder';
-import { BasicListApi } from '../data';
+import { setFieldsAdaptor, submitFieldsAdaptor } from '../helper';
 const Modal = ({
   isModalOpen,
   hideMoal,
@@ -15,7 +15,7 @@ const Modal = ({
   modalUrl: string;
 }) => {
   const [form] = Form.useForm();
-  const init = useRequest<{ data: PageApi.Data }>(`${modalUrl}`, {
+  const init = useRequest<{ data: BasicListApi.PageData }>(`${modalUrl}`, {
     manual: true,
   });
   const request = useRequest(
@@ -25,10 +25,8 @@ const Modal = ({
         url: `https://public-api-v2.aspirantzhang.com${uri}`,
         method,
         data: {
-          ...formValues,
+          ...submitFieldsAdaptor(formValues),
           'X-API-KEY': 'antd',
-          create_time: moment(formValues.create_time).format(),
-          update_time: moment(formValues.update_time).format(),
         },
       };
     },
@@ -39,26 +37,6 @@ const Modal = ({
   const layout = {
     labelCol: { span: 8 },
     wrapperCol: { span: 16 },
-  };
-  const setFieldsAdaptor = (data: PageApi.Data) => {
-    if (data?.layout?.tabs && data?.dataSource) {
-      const result = {};
-      data.layout.tabs.forEach((tab) => {
-        tab.data.forEach((field) => {
-          switch (field.type) {
-            case 'datetime':
-              result[field.key] = moment(data.dataSource[field.key]);
-              break;
-
-            default:
-              result[field.key] = data.dataSource[field.key];
-              break;
-          }
-        });
-      });
-      return result;
-    }
-    return {};
   };
   const onFinish = (values: any) => {
     request.run(values);

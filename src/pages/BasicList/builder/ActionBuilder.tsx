@@ -1,9 +1,9 @@
 import { Button } from 'antd';
 import { ButtonType } from 'antd/es/button/buttonHelpers';
-import { BasicListApi } from '../data';
+
 const ActionBuilder = (
   actions: BasicListApi.Action[] | undefined,
-  actionHandler: (action: BasicListApi.Action) => void,
+  actionHandler: BasicListApi.ActionHandler,
 ) => {
   return (actions || []).map((action) => {
     if (action.component === 'button') {
@@ -19,6 +19,7 @@ const ActionBuilder = (
         </Button>
       );
     }
+    return null;
   });
 };
 

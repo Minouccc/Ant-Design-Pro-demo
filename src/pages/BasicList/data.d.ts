@@ -1,124 +1,78 @@
-export module BasicListApi {
-  export interface Root {
-    success: boolean;
-    message: string;
-    data: Data;
-  }
+declare module BasicListApi {
+  type ActionHandler = (action: BasicListApi.Action) => void;
 
-  export interface Data {
-    page: Page;
-    layout: Layout;
-    dataSource: DataSource[];
-    meta: Meta;
-  }
-
-  export interface Page {
+  type Page = {
     title: string;
     type: string;
-    searchBar: boolean;
-    trash: boolean;
-  }
+    searchBar?: boolean;
+    trash?: boolean;
+  };
 
-  export interface Layout {
-    tableColumn: TableColumn[];
-    tableToolBar: Action[];
-    batchToolBar: Action[];
-  }
-
-  export interface TableColumn {
-    title: string;
-    dataIndex: string;
-    key: string;
-    type?: string;
-    data?: Daum[];
-    hideInColumn?: boolean;
-    sorter?: boolean;
-    mode?: string;
-    actions?: Action[];
-    [key: string]: any;
-  }
-
-  export interface Daum {
-    id?: number;
-    parent_id?: number;
-    name?: string;
-    create_time?: string;
-    delete_time: any;
-    status?: number;
-    value: any;
-    title: string;
-    depth?: number;
-    children?: Children[];
-  }
-
-  export interface Children {
-    id: number;
-    parent_id: number;
-    name: string;
-    create_time: string;
-    delete_time: any;
-    status: number;
-    value: number;
-    title: string;
-    depth: number;
-    children?: Children2[];
-  }
-
-  export interface Children2 {
-    id: number;
-    parent_id: number;
-    name: string;
-    create_time: string;
-    delete_time: any;
-    status: number;
-    value: number;
-    title: string;
-    depth: number;
-  }
-
-  export interface Action {
+  type Action = {
     component: string;
     text: string;
     type: string;
     action: string;
-    uri: string;
+    uri?: string;
     method?: string;
-  }
+  };
 
-  export interface DataSource {
-    id: number;
-    username: string;
-    display_name: string;
-    create_time: string;
-    delete_time: any;
-    status: number;
-    groups: Group[];
-  }
+  type Field = {
+    title: string;
+    dataIndex: string;
+    key: string;
+    [key: string]: any;
+  };
 
-  export interface Group {
-    id: number;
-    parent_id: number;
-    name: string;
-    create_time: string;
-    update_time: string;
-    delete_time: any;
-    status: number;
-    pivot: Pivot;
-  }
+  type DataSource = {
+    [key: string]: any;
+  };
 
-  export interface Pivot {
-    id: number;
-    admin_id: number;
-    group_id: number;
-    create_time: string;
-    update_time: string;
-    delete_time: any;
-    status: number;
-  }
-
-  export interface Meta {
+  type Meta = {
     total: number;
     per_page: number;
     page: number;
-  }
+  };
+
+  type Tabs = {
+    name: string;
+    title: string;
+    data: Field[];
+  };
+
+  type Actions = {
+    name: string;
+    title: string;
+    data: Action[];
+  };
+
+  type ListLayout = {
+    tableColumn: Field[];
+    tableToolBar: Action[];
+    batchToolBar: Action[];
+  };
+
+  type PageLayout = {
+    tabs: Tabs[];
+    actions: Actions[];
+  };
+
+  type ListData = {
+    page: Page;
+    layout: ListLayout;
+    dataSource: DataSource[];
+    meta: Meta;
+  };
+
+  type PageData = {
+    page: Page;
+    layout: PageLayout;
+    dataSource: DataSource;
+  };
+
+  type Root = {
+    success: boolean;
+    message: string;
+    data: PageData | ListData;
+  };
 }

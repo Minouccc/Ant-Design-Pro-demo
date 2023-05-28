@@ -1,10 +1,12 @@
 import { Space, Tag } from 'antd';
 import moment from 'moment';
-import { BasicListApi } from '../data';
 import ActionBuilder from './ActionBuilder';
 
-const ColumnBuilder = (tableColumn: BasicListApi.TableColumn[] | undefined) => {
-  const idArray: BasicListApi.TableColumn[] = [
+const ColumnBuilder = (
+  tableColumn: BasicListApi.Field[] | undefined,
+  actionHandler: BasicListApi.ActionHandler,
+) => {
+  const idArray: BasicListApi.Field[] = [
     {
       title: 'Id',
       dataIndex: 'id',
@@ -12,7 +14,7 @@ const ColumnBuilder = (tableColumn: BasicListApi.TableColumn[] | undefined) => {
       sorter: true,
     },
   ];
-  const newColumns: BasicListApi.TableColumn[] = [];
+  const newColumns: BasicListApi.Field[] = [];
   (tableColumn || []).forEach((column) => {
     if (column.hideInColumn !== true) {
       switch (column.type) {
@@ -23,7 +25,7 @@ const ColumnBuilder = (tableColumn: BasicListApi.TableColumn[] | undefined) => {
           break;
         case 'switch':
           column.render = (value: any) => {
-            const option = (column.data || []).find((item) => {
+            const option = (column.data || []).find((item: any) => {
               return (item.value = value);
             });
             return <Tag color={value ? 'blue' : 'red'}>{option?.title}</Tag>;
@@ -31,7 +33,7 @@ const ColumnBuilder = (tableColumn: BasicListApi.TableColumn[] | undefined) => {
           break;
         case 'actions':
           column.render = () => {
-            return <Space>{ActionBuilder(column.actions)}</Space>;
+            return <Space>{ActionBuilder(column.actions, actionHandler)}</Space>;
           };
           break;
         default:
