@@ -11,7 +11,7 @@ const Modal = ({
   modalUrl,
 }: {
   isModalOpen: boolean;
-  hideMoal: () => void;
+  hideMoal: (reload?: boolean) => void;
   modalUrl: string;
 }) => {
   const [form] = Form.useForm();
@@ -51,7 +51,7 @@ const Modal = ({
           content: data.message,
           key: 'process',
         });
-        hideMoal();
+        hideMoal(true);
       },
       formatResult: (res: any) => {
         return res;
@@ -71,6 +71,12 @@ const Modal = ({
       case 'submit':
         form.setFieldsValue({ uri: action.uri, method: action.method });
         form.submit();
+        break;
+      case 'reset':
+        form.resetFields();
+        break;
+      case 'cancel':
+        hideMoal();
         break;
       default:
         break;
@@ -92,7 +98,9 @@ const Modal = ({
       <AntdModal
         title={init?.data?.page?.title}
         open={isModalOpen}
-        onCancel={hideMoal}
+        onCancel={() => {
+          hideMoal();
+        }}
         footer={ActionBuilder(init?.data?.layout?.actions[0]?.data, actionHandler, request.loading)}
         maskClosable={false}
       >

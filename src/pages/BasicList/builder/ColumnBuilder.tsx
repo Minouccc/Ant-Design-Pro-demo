@@ -32,8 +32,8 @@ const ColumnBuilder = (
           };
           break;
         case 'actions':
-          column.render = () => {
-            return <Space>{ActionBuilder(column.actions, actionHandler, false)}</Space>;
+          column.render = (_: any, record: any) => {
+            return <Space>{ActionBuilder(column.actions, actionHandler, false, record)}</Space>;
           };
           break;
         default:
