@@ -1,11 +1,10 @@
 import { PageContainer } from '@ant-design/pro-layout';
-import { Button, Card, Col, Pagination, Row, Space, Table } from 'antd';
+import { Card, Col, Pagination, Row, Space, Table } from 'antd';
 import { useEffect, useState } from 'react';
 import { useRequest } from 'umi';
 import ActionBuilder from './builder/ActionBuilder';
 import ColumnBuilder from './builder/ColumnBuilder';
 import Modal from './component/Modal';
-import { BasicListApi } from './data';
 import './index.less';
 
 const Index = () => {
@@ -14,7 +13,7 @@ const Index = () => {
   const [sortQuery, setSortQuery] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalUrl, setModalUrl] = useState('');
-  const init = useRequest<{ data: BasicListApi.Data }>(
+  const init = useRequest<{ data: BasicListApi.ListData }>(
     `https://public-api-v2.aspirantzhang.com/api/admins?X-API-KEY=antd&page=${page}&per_page=${perPage}${sortQuery}`,
   );
 
@@ -34,6 +33,16 @@ const Index = () => {
     }
   };
   const searchLayout = () => {};
+  const actionHandler = (action: BasicListApi.Action) => {
+    switch (action.action) {
+      case 'modal':
+        setModalUrl(action.uri as string);
+        setIsModalOpen(true);
+        break;
+      default:
+        break;
+    }
+  };
   const beforeTableLayout = () => {
     return (
       <Row>
@@ -41,7 +50,7 @@ const Index = () => {
           ...
         </Col>
         <Col xs={24} sm={12} className="tableToolbar">
-          <Space>{ActionBuilder(init.data?.layout.tableToolBar)}</Space>
+          <Space>{ActionBuilder(init.data?.layout.tableToolBar, actionHandler, false)}</Space>
         </Col>
       </Row>
     );
@@ -74,29 +83,11 @@ const Index = () => {
       <PageContainer>
         {searchLayout()}
         <Card>
-          <Button
-            type="primary"
-            onClick={() => {
-              setIsModalOpen(true);
-              setModalUrl('https://public-api-v2.aspirantzhang.com/api/admins/add?X-API-KEY=antd');
-            }}
-          >
-            add
-          </Button>
-          <Button
-            type="primary"
-            onClick={() => {
-              setIsModalOpen(true);
-              setModalUrl('https://public-api-v2.aspirantzhang.com/api/admins/206?X-API-KEY=antd');
-            }}
-          >
-            edit
-          </Button>
           {beforeTableLayout()}
           <Table
             rowKey="id"
             dataSource={init?.data?.dataSource}
-            columns={ColumnBuilder(init?.data?.layout?.tableColumn)}
+            columns={ColumnBuilder(init?.data?.layout?.tableColumn, actionHandler)}
             pagination={false}
             onChange={tableChangeHandler}
           />

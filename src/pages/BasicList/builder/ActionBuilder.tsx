@@ -4,6 +4,7 @@ import { ButtonType } from 'antd/es/button/buttonHelpers';
 const ActionBuilder = (
   actions: BasicListApi.Action[] | undefined,
   actionHandler: BasicListApi.ActionHandler,
+  loading: boolean,
 ) => {
   return (actions || []).map((action) => {
     if (action.component === 'button') {
@@ -14,6 +15,7 @@ const ActionBuilder = (
           onClick={() => {
             actionHandler(action);
           }}
+          loading={loading}
         >
           {action.text}
         </Button>

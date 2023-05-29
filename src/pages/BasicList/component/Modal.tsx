@@ -1,4 +1,4 @@
-import { Form, Input, Modal as AntdModal } from 'antd';
+import { Form, Input, message, Modal as AntdModal } from 'antd';
 import moment from 'moment';
 import { useEffect } from 'react';
 import { useRequest } from 'umi';
@@ -15,12 +15,16 @@ const Modal = ({
   modalUrl: string;
 }) => {
   const [form] = Form.useForm();
-  const init = useRequest<{ data: BasicListApi.PageData }>(`${modalUrl}`, {
-    manual: true,
-  });
+  const init = useRequest<{ data: BasicListApi.PageData }>(
+    `https://public-api-v2.aspirantzhang.com${modalUrl}?X-API-KEY=antd`,
+    {
+      manual: true,
+    },
+  );
   const request = useRequest(
     (values: any) => {
       const { uri, method, ...formValues } = values;
+      message.loading({ content: 'Processing...', key: 'process', duration: 0 });
       return {
         url: `https://public-api-v2.aspirantzhang.com${uri}`,
         method,
@@ -32,6 +36,26 @@ const Modal = ({
     },
     {
       manual: true,
+      onError: (error) => {
+        console.log(error);
+        if (error.name === 'BizError') {
+          message.error({
+            content: 'Business Error, please try again.',
+            key: 'process',
+            duration: 20,
+          });
+        }
+      },
+      onSuccess: (data) => {
+        message.success({
+          content: data.message,
+          key: 'process',
+        });
+        hideMoal();
+      },
+      formatResult: (res: any) => {
+        return res;
+      },
     },
   );
   const layout = {
@@ -69,7 +93,7 @@ const Modal = ({
         title={init?.data?.page?.title}
         open={isModalOpen}
         onCancel={hideMoal}
-        footer={ActionBuilder(init?.data?.layout?.actions[0]?.data, actionHandler)}
+        footer={ActionBuilder(init?.data?.layout?.actions[0]?.data, actionHandler, request.loading)}
         maskClosable={false}
       >
         <Form

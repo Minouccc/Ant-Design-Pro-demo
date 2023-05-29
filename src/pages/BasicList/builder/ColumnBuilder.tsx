@@ -33,7 +33,7 @@ const ColumnBuilder = (
           break;
         case 'actions':
           column.render = () => {
-            return <Space>{ActionBuilder(column.actions, actionHandler)}</Space>;
+            return <Space>{ActionBuilder(column.actions, actionHandler, false)}</Space>;
           };
           break;
         default:

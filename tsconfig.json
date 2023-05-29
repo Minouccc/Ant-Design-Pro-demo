@@ -8,6 +8,7 @@
     "esModuleInterop": true,
     "sourceMap": true,
     "baseUrl": "./",
+    "forceConsistentCasingInFileNames": false,
     "skipLibCheck": true,
     "experimentalDecorators": true,
     "strict": true,
