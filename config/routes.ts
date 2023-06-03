@@ -17,6 +17,7 @@ export default [
   },
   { name: '查询表格', icon: 'table', path: '/list', component: './TableList' },
   { name: '列表', path: '/basic-list', icon: 'table', component: './BasicList' },
+  { name: 'todo', path: '/account/todo', icon: 'UnorderedListOutlined', component: './Todo' },
   { path: '/', redirect: '/welcome' },
   { path: '*', layout: false, component: './404' },
 ];

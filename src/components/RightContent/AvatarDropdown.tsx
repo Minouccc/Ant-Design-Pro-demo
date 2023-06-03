@@ -1,5 +1,10 @@
 import { outLogin } from '@/services/ant-design-pro/api';
-import { LogoutOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
+import {
+  LogoutOutlined,
+  SettingOutlined,
+  UnorderedListOutlined,
+  UserOutlined,
+} from '@ant-design/icons';
 import { useEmotionCss } from '@ant-design/use-emotion-css';
 import { history, useModel } from '@umijs/max';
 import { Spin } from 'antd';
@@ -60,6 +65,9 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu, childre
   const onMenuClick = useCallback(
     (event: MenuInfo) => {
       const { key } = event;
+      if (key === 'todo') {
+        history.push('/todo');
+      }
       if (key === 'logout') {
         flushSync(() => {
           setInitialState((s) => ({ ...s, currentUser: undefined }));
@@ -116,6 +124,11 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu, childre
       key: 'logout',
       icon: <LogoutOutlined />,
       label: '退出登录',
+    },
+    {
+      key: 'todo',
+      icon: <UnorderedListOutlined />,
+      label: '代办事项',
     },
   ];
 
